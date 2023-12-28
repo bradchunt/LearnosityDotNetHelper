@@ -47,6 +47,9 @@ public class Item
     
     [JsonProperty("questions")]
     public List<QuestionReference> QuestionReferences { get; set; } = new List<QuestionReference>();
+
+    [JsonProperty("features")]
+    public List<FeatureReference> FeatureReferences { get; set; } = new List<FeatureReference>();
    
     [JsonProperty("tags")]
     public List<Tag> Tags { get; set; } = new List<Tag>();
