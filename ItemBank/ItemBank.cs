@@ -23,7 +23,7 @@ public class ItemBank
         /// </summary>
         /// <param name="questions"></param>
         /// <returns></returns>
-       /*  public static string SetFeatures(Features features)
+        public static string SetFeatures(Features features)
         {
             string json = JsonConvert.SerializeObject(features, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             Console.WriteLine(json);
@@ -42,7 +42,7 @@ public class ItemBank
             Console.WriteLine(r.getStatusCode().ToString());
             Console.WriteLine(r.getBody());
             return r.getStatusCode().ToString();
-        } */
+        }
 
         
         
@@ -168,7 +168,7 @@ public class ItemBank
         //this method is based on documentation here https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#uploadAssets
         //first you post JSON to create a public URL, then you do an HTTP Put to send the local file content to the URL for storage
 
-       /*  public static string UploadAsset(Asset asset)
+        public static string UploadAsset(Asset asset)
         {
             string json = JsonConvert.SerializeObject(asset, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
            
@@ -198,7 +198,7 @@ public class ItemBank
             using (HttpClient httpClient = new HttpClient())
             {
                 // Read the binary data from the file
-                byte[] fileData = File.ReadAllBytes(asset.subkeys[0]);
+                byte[] fileData = File.ReadAllBytes(asset.Subkeys[0]);
 
                 // Create a ByteArrayContent to hold the image data
                 ByteArrayContent content = new ByteArrayContent(fileData);
@@ -222,7 +222,7 @@ public class ItemBank
 
 
             return publicURL; //this public url will be used to create the feature based on the uploaded asset
-        } */
+        } 
 
 
     

@@ -3,10 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <PackageId>LearnosityDotNetHelper</PackageId>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <Authors>Brad Hunt</Authors>
-    <Description>A library to wrap the Learnosity APIs with .NET objects/code.</Description>
+    <Description>A library to assist .NET developers when working with the Learnosity APIs.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/bradchunt/LearnosityDotNetHelper</RepositoryUrl>
+    <PackageTags>Learnosity</PackageTags>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
