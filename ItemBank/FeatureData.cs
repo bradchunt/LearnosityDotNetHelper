@@ -19,7 +19,7 @@ namespace LearnosityDotNetHelper
         [JsonProperty("caption")]
         public string? Caption { get; set; }
 
-         [JsonProperty("content")]
+        [JsonProperty("content")]
         public string? Content { get; set; }
 
     }
