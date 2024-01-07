@@ -41,7 +41,7 @@ public class ItemBank
         /// <returns></returns>
         public string SetFeatures(Features features)
         {
-            string url = "https://data.learnosity.com/v2022.2.LTS/itembank/features";
+            string url = $"{_settings.URLData}/itembank/features";
             Remote r = SendDataApiRequest(url, "set", features);
             return r.getStatusCode().ToString();
         }
@@ -54,7 +54,7 @@ public class ItemBank
         /// <returns></returns>
         public string SetQuestions(Questions questions)
         {
-            string url = "https://data.learnosity.com/v2022.2.LTS/itembank/questions";
+            string url = $"{_settings.URLData}/itembank/questions";
             Remote r = SendDataApiRequest(url, "set", questions);
             return r.getStatusCode().ToString();
         }
@@ -68,7 +68,7 @@ public class ItemBank
         
         public string SetItems(Items items)
         {
-           string url = "https://data.learnosity.com/v2022.2.LTS/itembank/items";
+           string url = $"{_settings.URLData}/itembank/items";
            Remote r = SendDataApiRequest(url, "set", items);
             return r.getStatusCode().ToString();
         }
