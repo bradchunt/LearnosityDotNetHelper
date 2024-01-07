@@ -1,10 +1,10 @@
-﻿namespace LearnosityDotNetHelper;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using LearnositySDK.Request;
 using LearnositySDK.Utils;
 
+
+namespace LearnosityDotNetHelper;
 public class ItemBank
 {
    
@@ -17,7 +17,25 @@ public class ItemBank
         {
         }
 
+    
+    private static Remote SendDataApiRequest(string url, string action, object dataObject)
+    {
+        string json = JsonConvert.SerializeObject(dataObject, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+        Console.WriteLine(json);
 
+        JsonObject security = new JsonObject();
+        security.set("consumer_key", consumerKey);
+        security.set("domain", "localhost");
+
+        DataApi da = new DataApi();
+        JsonObject request = JsonObjectFactory.fromString(json);
+        Remote r = da.request(url, security, consumerSecret, request, action);
+        Console.WriteLine(r.getStatusCode().ToString());
+        Console.WriteLine(r.getBody());
+
+        return r;
+    }
+    
    
         /// https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#setFeatures
         /// </summary>
@@ -25,27 +43,10 @@ public class ItemBank
         /// <returns></returns>
         public static string SetFeatures(Features features)
         {
-            string json = JsonConvert.SerializeObject(features, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            Console.WriteLine(json);
-
             string url = "https://data.learnosity.com/v2022.2.LTS/itembank/features";
-            string action = "set";
-
-            JsonObject security = new JsonObject();
-            security.set("consumer_key", consumerKey);
-            security.set("domain", "localhost");
-
-
-            DataApi da = new DataApi();
-            JsonObject request = JsonObjectFactory.fromString(json);
-            Remote r = da.request(url, security, consumerSecret, request, action);
-            Console.WriteLine(r.getStatusCode().ToString());
-            Console.WriteLine(r.getBody());
+            Remote r = SendDataApiRequest(url, "set", features);
             return r.getStatusCode().ToString();
         }
-
-        
-        
         
         /// <summary>
         /// Pass a collection of questions to the API. 
@@ -55,38 +56,8 @@ public class ItemBank
         /// <returns></returns>
         public static string SetQuestions(Questions questions)
         {
-             // Configure the JsonSerializerSettings
-                var settings = new JsonSerializerSettings
-                {
-                    Formatting = Formatting.Indented, 
-                    NullValueHandling = NullValueHandling.Ignore, 
-                    Converters = new List<JsonConverter> { new StringEnumConverter() } 
-                };
-
-                // Serialize the object to JSON using the specified settings
-                string json = JsonConvert.SerializeObject(questions, settings);
-
-         
-            using (StreamWriter writer = new StreamWriter("output.txt",true))
-            {
-              writer.Write(json);
-         
-            }
-
-
             string url = "https://data.learnosity.com/v2022.2.LTS/itembank/questions";
-            string action = "set";
-
-        
-            JsonObject security = new JsonObject();
-            security.set("consumer_key", consumerKey);
-            security.set("domain", "localhost");
-
-
-            DataApi da = new DataApi();
-            JsonObject request = JsonObjectFactory.fromString(json);
-            Remote r = da.request(url, security, consumerSecret, request, action);
-            //Console.WriteLine(r.getStatusCode().ToString());
+            Remote r = SendDataApiRequest(url, "set", questions);
             return r.getStatusCode().ToString();
         }
 
@@ -99,39 +70,9 @@ public class ItemBank
         
         public static string SetItems(Items items)
         {
-               // Configure the JsonSerializerSettings
-                var settings = new JsonSerializerSettings
-                {
-                    Formatting = Formatting.Indented, 
-                    NullValueHandling = NullValueHandling.Ignore, 
-                    Converters = new List<JsonConverter> { new StringEnumConverter() } 
-                };
-
-                // Serialize the object to JSON using the specified settings
-                string json = JsonConvert.SerializeObject(items, settings);
-
-            using (StreamWriter writer = new StreamWriter("output.txt",true))
-            {
-              writer.Write(json);
-         
-            }
-
-            string url = "https://data.learnosity.com/v2022.2.LTS/itembank/items";
-            string action = "set";
-
-    
-            JsonObject security = new JsonObject();
-            security.set("consumer_key", consumerKey);
-            security.set("domain", "localhost");
-
-
-            DataApi da = new DataApi();
-            JsonObject request = JsonObjectFactory.fromString(json);
-            Remote r = da.request(url, security, consumerSecret, request, action);
-            Console.WriteLine(r.getStatusCode().ToString());
-
+           string url = "https://data.learnosity.com/v2022.2.LTS/itembank/items";
+           Remote r = SendDataApiRequest(url, "set", items);
             return r.getStatusCode().ToString();
-     
         }
 
         //https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#getQuestions
