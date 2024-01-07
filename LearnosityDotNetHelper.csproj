@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <PackageId>LearnosityDotNetHelper</PackageId>
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
     <Authors>Brad Hunt</Authors>
     <Description>A library to assist .NET developers when working with the Learnosity APIs.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -11,9 +11,11 @@
     <PackageTags>Learnosity</PackageTags>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
     <PackageReference Include="LearnositySDK" Version="0.9.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>

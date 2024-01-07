@@ -8,28 +8,26 @@ namespace LearnosityDotNetHelper;
 public class ItemBank
 {
    
-        //Demo Site
-        public const string consumerKey = "yis0TYCu7U9V4o7M";
-        public const string consumerSecret = "74c5fd430cf1242a527f6223aebd42d30464be22";
+    private readonly LearnositySettings _settings;
 
-       
-        public ItemBank()
-        {
-        }
+    public ItemBank(LearnositySettings settings)
+    {
+        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+    }
 
     
-    private static Remote SendDataApiRequest(string url, string action, object dataObject)
+    private Remote SendDataApiRequest(string url, string action, object dataObject)
     {
         string json = JsonConvert.SerializeObject(dataObject, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
         Console.WriteLine(json);
 
         JsonObject security = new JsonObject();
-        security.set("consumer_key", consumerKey);
+        security.set("consumer_key", _settings.ConsumerKey);
         security.set("domain", "localhost");
 
         DataApi da = new DataApi();
         JsonObject request = JsonObjectFactory.fromString(json);
-        Remote r = da.request(url, security, consumerSecret, request, action);
+        Remote r = da.request(url, security, _settings.ConsumerSecret, request, action);
         Console.WriteLine(r.getStatusCode().ToString());
         Console.WriteLine(r.getBody());
 
@@ -41,7 +39,7 @@ public class ItemBank
         /// </summary>
         /// <param name="questions"></param>
         /// <returns></returns>
-        public static string SetFeatures(Features features)
+        public string SetFeatures(Features features)
         {
             string url = "https://data.learnosity.com/v2022.2.LTS/itembank/features";
             Remote r = SendDataApiRequest(url, "set", features);
@@ -54,7 +52,7 @@ public class ItemBank
         /// </summary>
         /// <param name="questions"></param>
         /// <returns></returns>
-        public static string SetQuestions(Questions questions)
+        public string SetQuestions(Questions questions)
         {
             string url = "https://data.learnosity.com/v2022.2.LTS/itembank/questions";
             Remote r = SendDataApiRequest(url, "set", questions);
@@ -68,7 +66,7 @@ public class ItemBank
         /// <param name="items"></param>
         /// <returns></returns>
         
-        public static string SetItems(Items items)
+        public string SetItems(Items items)
         {
            string url = "https://data.learnosity.com/v2022.2.LTS/itembank/items";
            Remote r = SendDataApiRequest(url, "set", items);
@@ -109,7 +107,7 @@ public class ItemBank
         //this method is based on documentation here https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#uploadAssets
         //first you post JSON to create a public URL, then you do an HTTP Put to send the local file content to the URL for storage
 
-        public static string UploadAsset(Asset asset)
+        public string UploadAsset(Asset asset)
         {
             string json = JsonConvert.SerializeObject(asset, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
            
@@ -117,14 +115,14 @@ public class ItemBank
             string action = "get";
 
             JsonObject security = new JsonObject();
-            security.set("consumer_key", consumerKey);
+            security.set("consumer_key", _settings.ConsumerKey);
             security.set("domain", "localhost");
 
 
             DataApi da = new DataApi();
             JsonObject request = JsonObjectFactory.fromString(json);
             Console.WriteLine(json);
-            Remote r = da.request(url, security, consumerSecret, request, action);
+            Remote r = da.request(url, security, _settings.ConsumerSecret, request, action);
 
             string responseBody = r.getBody().ToString();
             Console.WriteLine(r.getBody().ToString());
