@@ -14,7 +14,7 @@ public class Item
     public Definition? Definition { get; set; } = new Definition();
     
     [JsonProperty("status")]
-    public string? Status { get; set; }
+    public ItemStatuses? Status { get; set; }
 
     [JsonProperty("title")]
     public string? Title { get; set; }
