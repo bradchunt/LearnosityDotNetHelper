@@ -111,7 +111,7 @@ public class ItemBank
         {
             string json = JsonConvert.SerializeObject(asset, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
            
-            string url = "https://data.learnosity.com/v2022.2.LTS/itembank/upload/assets";
+            string url = $"{_settings.URLData}/itembank/upload/assets";
             string action = "get";
 
             JsonObject security = new JsonObject();
