@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Converters;
 using LearnositySDK.Request;
 using LearnositySDK.Utils;
+using Microsoft.Extensions.Options;
 
 
 namespace LearnosityDotNetHelper;
@@ -10,12 +11,12 @@ public class ItemBank
    
     private readonly LearnositySettings _settings;
 
-    public ItemBank(LearnositySettings settings)
+    public ItemBank(IOptions<LearnositySettings> settings)
     {
-        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        _settings = settings?.Value ?? throw new ArgumentNullException(nameof(settings));
     }
 
-    
+
     private Remote SendDataApiRequest(string url, string action, object dataObject)
     {
         string json = JsonConvert.SerializeObject(dataObject, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
