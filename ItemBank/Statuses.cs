@@ -5,7 +5,7 @@ using Newtonsoft.Json.Converters;
 namespace LearnosityDotNetHelper;
 
 [JsonConverter(typeof(StringEnumConverter))]
-public enum ItemStatuses
+public enum Statuses
 {   
     [EnumMember(Value="published")]
     Published,

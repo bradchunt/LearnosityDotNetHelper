@@ -36,79 +36,94 @@ public class ItemBank
     }
     
    
-        /// https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#setFeatures
-        /// </summary>
-        /// <param name="questions"></param>
-        /// <returns></returns>
-        public string SetFeatures(Features features)
-        {
-            string url = $"{_settings.URLData}/itembank/features";
-            Remote r = SendDataApiRequest(url, "set", features);
-            return r.getStatusCode().ToString();
-        }
+    /// https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#setFeatures
+    /// </summary>
+    /// <param name="questions"></param>
+    /// <returns></returns>
+    public string SetFeatures(Features features)
+    {
+        string url = $"{_settings.URLData}/itembank/features";
+        Remote r = SendDataApiRequest(url, "set", features);
+        return r.getStatusCode().ToString();
+    }
         
-        /// <summary>
-        /// Pass a collection of questions to the API. 
-        /// https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#setQuestions
-        /// </summary>
-        /// <param name="questions"></param>
-        /// <returns></returns>
-        public string SetQuestions(Questions questions)
-        {
-            string url = $"{_settings.URLData}/itembank/questions";
-            Remote r = SendDataApiRequest(url, "set", questions);
-            return r.getStatusCode().ToString();
-        }
+    /// <summary>
+    /// Pass a collection of questions to the API. 
+    /// https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#setQuestions
+    /// </summary>
+    /// <param name="questions"></param>
+    /// <returns></returns>
+    public string SetQuestions(Questions questions)
+    {
+        string url = $"{_settings.URLData}/itembank/questions";
+        Remote r = SendDataApiRequest(url, "set", questions);
+        return r.getStatusCode().ToString();
+    }
 
-        /// <summary>
-        /// Pass a collection of items to the API. Items contain question references, so questions needs to be created first with SetQuestions.
-        /// https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#setItems
-        /// </summary>
-        /// <param name="items"></param>
-        /// <returns></returns>
+    /// <summary>
+    /// Pass a collection of items to the API. Items contain question references, so questions need to be created first with SetQuestions.
+    /// https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#setItems
+    /// </summary>
+    /// <param name="items"></param>
+    /// <returns></returns>
         
-        public string SetItems(Items items)
-        {
-           string url = $"{_settings.URLData}/itembank/items";
-           Remote r = SendDataApiRequest(url, "set", items);
-            return r.getStatusCode().ToString();
-        }
+    public string SetItems(Items items)
+    {
+        string url = $"{_settings.URLData}/itembank/items";
+        Remote r = SendDataApiRequest(url, "set", items);
+        return r.getStatusCode().ToString();
+    }
 
-        //https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#getQuestions
-       /*  public static string GetQuestions(ItemReferences references)
-        {
-            string json = JsonConvert.SerializeObject(references, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            Console.WriteLine(json);
+    /// <summary>
+    /// Pass a collection of activities to the API. Activities contain item references, so items need to be created first with SetItems.
+    /// https://help.learnosity.com/hc/en-us/articles/26076378893725-Activities-Endpoints-Data-API#set-activities
+    /// </summary>
+    /// <param name="activities"></param>
+    /// <returns></returns>
 
-            string url = "https://data.learnosity.com/v2022.2.LTS/itembank/questions";
-            string action = "get";
-
-       
-            JsonObject security = new JsonObject();
-            security.set("consumer_key", consumerKey);
-            security.set("domain", "localhost");
-
-
-            DataApi da = new DataApi();
-            JsonObject request = JsonObjectFactory.fromString(json);
-            Remote r = da.request(url, security, consumerSecret, request, action);
-       
-
-            Console.WriteLine(r.getBody().ToString());
-            Console.WriteLine(r.getStatusCode().ToString());
-
-            return r.getStatusCode().ToString();
-
-        } */
+    public string SetActivities(Activities activities)
+    {
+        string url = $"{_settings.URLData}/itembank/activities";
+        Remote r = SendDataApiRequest(url, "set", activities);
+        return r.getStatusCode().ToString();
+    }
 
 
+    //https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#getQuestions
+    /*  public static string GetQuestions(ItemReferences references)
+     {
+         string json = JsonConvert.SerializeObject(references, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+         Console.WriteLine(json);
+
+         string url = "https://data.learnosity.com/v2022.2.LTS/itembank/questions";
+         string action = "get";
 
 
-        //ideally would be async method
-        //this method is based on documentation here https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#uploadAssets
-        //first you post JSON to create a public URL, then you do an HTTP Put to send the local file content to the URL for storage
+         JsonObject security = new JsonObject();
+         security.set("consumer_key", consumerKey);
+         security.set("domain", "localhost");
 
-        public string UploadAsset(Asset asset)
+
+         DataApi da = new DataApi();
+         JsonObject request = JsonObjectFactory.fromString(json);
+         Remote r = da.request(url, security, consumerSecret, request, action);
+
+
+         Console.WriteLine(r.getBody().ToString());
+         Console.WriteLine(r.getStatusCode().ToString());
+
+         return r.getStatusCode().ToString();
+
+     } */
+
+
+
+
+    //ideally would be async method
+    //this method is based on documentation here https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#uploadAssets
+    //first you post JSON to create a public URL, then you do an HTTP Put to send the local file content to the URL for storage
+
+    public string UploadAsset(Asset asset)
         {
             string json = JsonConvert.SerializeObject(asset, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
            

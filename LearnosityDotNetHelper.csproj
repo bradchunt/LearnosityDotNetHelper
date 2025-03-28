@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <PackageId>LearnosityDotNetHelper</PackageId>
-    <Version>0.0.5</Version>
+    <Version>0.0.6</Version>
     <Authors>Brad Hunt</Authors>
     <Description>A library to assist .NET developers when working with the Learnosity APIs.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
