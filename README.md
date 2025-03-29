@@ -49,7 +49,7 @@ itemBank.SetItems(items);
 
 In your project, you will need to configure an appsettings.json file with needed Learnosity API information.
 
-For example:
+For example see below. Note the consumer key and secret below are publicly available and point to the Learnosity Demo site.
 ```
 {
     "LearnositySettings": {
