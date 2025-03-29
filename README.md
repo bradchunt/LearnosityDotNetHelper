@@ -47,4 +47,22 @@ itemBank.SetQuestions(questions);
 itemBank.SetItems(items);
 ```
 
+In your project, you will need to configure an appsettings.json file with needed Learnosity API information.
+
+For example:
+```
+{
+    "LearnositySettings": {
+        "ConsumerKey": "yis0TYCu7U9V4o7M",
+        "ConsumerSecret": "74c5fd430cf1242a527f6223aebd42d30464be22",
+        "URLAssess": "https://assess.learnosity.com/v2025.1.LTS",
+        "URLAuthorAPI": "https://authorapi.learnosity.com/v2025.1.LTS",
+        "URLData": "https://data.learnosity.com/v2025.1.LTS",
+        "URLItems": "https://items.learnosity.com/v2025.1.LTS",
+        "URLReports": "https://reports.learnosity.com/v2025.1.LTS"
+    }
+}
+  
+```
+
 
