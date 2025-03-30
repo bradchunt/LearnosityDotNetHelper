@@ -8,7 +8,7 @@ public class Questions
     public List<Question> Question { get; set; } =new();
   
     [JsonProperty("meta")]
-    public Meta Meta { get; set; } = new();
+    public Meta? Meta { get; set; }
 
   
     [JsonProperty("organisation_id")]

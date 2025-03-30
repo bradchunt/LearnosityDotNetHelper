@@ -9,7 +9,7 @@ public class Items
      public List<Item> Item { get; set; } = new List<Item>();
 
     [JsonProperty("meta")]
-    public Meta Meta { get; set; } = new();
+    public Meta? Meta { get; set; }
 
     [JsonProperty("organisation_id")]
     public int? OrganizationId {get;set;}

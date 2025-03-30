@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <PackageId>LearnosityDotNetHelper</PackageId>
-    <Version>0.0.6</Version>
+    <Version>0.0.7</Version>
     <Authors>Brad Hunt</Authors>
-    <Description>A library to assist .NET developers when working with the Learnosity APIs.</Description>
+    <Description>A class library to assist .NET developers when working with the Learnosity APIs.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/bradchunt/LearnosityDotNetHelper</RepositoryUrl>
     <PackageTags>Learnosity</PackageTags>

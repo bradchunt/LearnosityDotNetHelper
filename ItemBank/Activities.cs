@@ -13,7 +13,7 @@ namespace LearnosityDotNetHelper
         public List<Activity> Activity { get; set; } = new List<Activity>();
 
         [JsonProperty("meta")]
-        public Meta Meta { get; set; } = new();
+        public Meta? Meta { get; set; } 
 
         [JsonProperty("organisation_id ")]
         public string? OrganizationId { get; set; }

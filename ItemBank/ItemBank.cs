@@ -3,6 +3,8 @@ using Newtonsoft.Json.Converters;
 using LearnositySDK.Request;
 using LearnositySDK.Utils;
 using Microsoft.Extensions.Options;
+using LearnositySDK.Examples;
+
 
 
 namespace LearnosityDotNetHelper;
@@ -19,32 +21,28 @@ public class ItemBank
 
     private Remote SendDataApiRequest(string url, string action, object dataObject)
     {
-        string json = JsonConvert.SerializeObject(dataObject, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-        Console.WriteLine(json);
-
+        
+        string json = JsonConvert.SerializeObject(dataObject, Formatting.Indented,
+        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
         JsonObject security = new JsonObject();
         security.set("consumer_key", _settings.ConsumerKey);
         security.set("domain", "localhost");
-
         DataApi da = new DataApi();
         JsonObject request = JsonObjectFactory.fromString(json);
         Remote r = da.request(url, security, _settings.ConsumerSecret, request, action);
-        Console.WriteLine(r.getStatusCode().ToString());
-        Console.WriteLine(r.getBody());
-
         return r;
+           
     }
-    
-   
+
+
     /// https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#setFeatures
     /// </summary>
     /// <param name="questions"></param>
     /// <returns></returns>
-    public string SetFeatures(Features features)
+    public Remote SetFeatures(Features features)
     {
         string url = $"{_settings.URLData}/itembank/features";
-        Remote r = SendDataApiRequest(url, "set", features);
-        return r.getStatusCode().ToString();
+        return SendDataApiRequest(url, "set", features);
     }
         
     /// <summary>
@@ -53,11 +51,10 @@ public class ItemBank
     /// </summary>
     /// <param name="questions"></param>
     /// <returns></returns>
-    public string SetQuestions(Questions questions)
+    public Remote SetQuestions(Questions questions)
     {
         string url = $"{_settings.URLData}/itembank/questions";
-        Remote r = SendDataApiRequest(url, "set", questions);
-        return r.getStatusCode().ToString();
+        return SendDataApiRequest(url, "set", questions);
     }
 
     /// <summary>
@@ -67,11 +64,10 @@ public class ItemBank
     /// <param name="items"></param>
     /// <returns></returns>
         
-    public string SetItems(Items items)
+    public Remote SetItems(Items items)
     {
         string url = $"{_settings.URLData}/itembank/items";
-        Remote r = SendDataApiRequest(url, "set", items);
-        return r.getStatusCode().ToString();
+        return SendDataApiRequest(url, "set", items);
     }
 
     /// <summary>
@@ -81,11 +77,10 @@ public class ItemBank
     /// <param name="activities"></param>
     /// <returns></returns>
 
-    public string SetActivities(Activities activities)
+    public Remote SetActivities(Activities activities)
     {
         string url = $"{_settings.URLData}/itembank/activities";
-        Remote r = SendDataApiRequest(url, "set", activities);
-        return r.getStatusCode().ToString();
+        return SendDataApiRequest(url, "set", activities);
     }
 
 
