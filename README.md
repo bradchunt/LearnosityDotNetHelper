@@ -7,9 +7,9 @@ Example Usage:
 ```
 //A Learnosity meta object that can be added to questions and items.
 Meta meta = new();
-meta.User.FirstName = "Brad";
-meta.User.LastName = "Hunt";
-meta.User.Email = "bhunt@bhunt.com";
+meta.User.FirstName = "First";
+meta.User.LastName = "Last";
+meta.User.Email = "first.last@site.com";
 
 //Create a list of questions that will be sent to the Learnosity API
 Questions questions = new Questions();
