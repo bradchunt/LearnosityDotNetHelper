@@ -1,16 +1,15 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using LearnositySDK.Request;
 using LearnositySDK.Utils;
 using Microsoft.Extensions.Options;
-using LearnositySDK.Examples;
+
 
 
 
 namespace LearnosityDotNetHelper;
 public class ItemBank
 {
-   
+
     private readonly LearnositySettings _settings;
 
     public ItemBank(IOptions<LearnositySettings> settings)
@@ -21,7 +20,7 @@ public class ItemBank
 
     private Remote SendDataApiRequest(string url, string action, object dataObject)
     {
-        
+
         string json = JsonConvert.SerializeObject(dataObject, Formatting.Indented,
         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
         JsonObject security = new JsonObject();
@@ -31,7 +30,7 @@ public class ItemBank
         JsonObject request = JsonObjectFactory.fromString(json);
         Remote r = da.request(url, security, _settings.ConsumerSecret, request, action);
         return r;
-           
+
     }
 
 
@@ -44,7 +43,7 @@ public class ItemBank
         string url = $"{_settings.URLData}/itembank/features";
         return SendDataApiRequest(url, "set", features);
     }
-        
+
     /// <summary>
     /// Pass a collection of questions to the API. 
     /// https://reference.learnosity.com/data-api/endpoints/itembank_endpoints#setQuestions
@@ -63,7 +62,7 @@ public class ItemBank
     /// </summary>
     /// <param name="items"></param>
     /// <returns></returns>
-        
+
     public Remote SetItems(Items items)
     {
         string url = $"{_settings.URLData}/itembank/items";
@@ -81,6 +80,32 @@ public class ItemBank
     {
         string url = $"{_settings.URLData}/itembank/activities";
         return SendDataApiRequest(url, "set", activities);
+    }
+
+    /// <summary>
+    /// Pass a collection of activity references to the API. 
+    /// https://help.learnosity.com/hc/en-us/articles/26076378893725-Activities-Endpoints-Data-API#get-activities
+    /// </summary>
+    /// <param name="activityReferences"></param>
+    /// <returns></returns>
+
+    public Remote GetActivities(ActivityReferences activityReferences)
+    {
+        string url = $"{_settings.URLData}/itembank/activities";
+        return SendDataApiRequest(url, "get", activityReferences);
+    }
+
+    /// <summary>
+    /// Pass a collection of item references to the API. 
+    /// https://help.learnosity.com/hc/en-us/articles/26076386828189-Items-Endpoints-Data-API#get-items
+    /// </summary>
+    /// <param name="itemReferences"></param>
+    /// <returns></returns>
+
+    public Remote GetItems(ItemReferences itemReferences)
+    {
+        string url = $"{_settings.URLData}/itembank/items";
+        return SendDataApiRequest(url, "get", itemReferences);
     }
 
 
@@ -119,61 +144,103 @@ public class ItemBank
     //first you post JSON to create a public URL, then you do an HTTP Put to send the local file content to the URL for storage
 
     public string UploadAsset(Asset asset)
+    {
+        string json = JsonConvert.SerializeObject(asset, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+        string url = $"{_settings.URLData}/itembank/upload/assets";
+        string action = "get";
+
+        JsonObject security = new JsonObject();
+        security.set("consumer_key", _settings.ConsumerKey);
+        security.set("domain", "localhost");
+
+
+        DataApi da = new DataApi();
+        JsonObject request = JsonObjectFactory.fromString(json);
+        Console.WriteLine(json);
+        Remote r = da.request(url, security, _settings.ConsumerSecret, request, action);
+
+        string responseBody = r.getBody().ToString();
+        Console.WriteLine(r.getBody().ToString());
+
+
+        //parse the response and then prep the HTTP PUT with contents inside response
+        var response = JsonConvert.DeserializeObject<dynamic>(responseBody);
+        string upload = response.data[0].upload;
+        string publicURL = response.data[0]["public"];
+        string contentType = response.data[0].content_type;
+
+        using (HttpClient httpClient = new HttpClient())
         {
-            string json = JsonConvert.SerializeObject(asset, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-           
-            string url = $"{_settings.URLData}/itembank/upload/assets";
-            string action = "get";
+            // Read the binary data from the file
+            byte[] fileData = File.ReadAllBytes(asset.Subkeys[0]);
 
-            JsonObject security = new JsonObject();
-            security.set("consumer_key", _settings.ConsumerKey);
-            security.set("domain", "localhost");
+            // Create a ByteArrayContent to hold the image data
+            ByteArrayContent content = new ByteArrayContent(fileData);
 
+            // Set the Content-Type header
+            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
 
-            DataApi da = new DataApi();
-            JsonObject request = JsonObjectFactory.fromString(json);
-            Console.WriteLine(json);
-            Remote r = da.request(url, security, _settings.ConsumerSecret, request, action);
+            // Send the PUT request with the image data
+            HttpResponseMessage httpResponse = httpClient.PutAsync(upload, content).Result;
 
-            string responseBody = r.getBody().ToString();
-            Console.WriteLine(r.getBody().ToString());
-            
-            
-            //parse the response and then prep the HTTP PUT with contents inside response
-            var response = JsonConvert.DeserializeObject<dynamic>(responseBody);
-            string upload = response.data[0].upload;
-            string publicURL = response.data[0]["public"];
-            string contentType = response.data[0].content_type;
-
-            using (HttpClient httpClient = new HttpClient())
+            // Check the response status
+            if (httpResponse.IsSuccessStatusCode)
             {
-                // Read the binary data from the file
-                byte[] fileData = File.ReadAllBytes(asset.Subkeys[0]);
-
-                // Create a ByteArrayContent to hold the image data
-                ByteArrayContent content = new ByteArrayContent(fileData);
-
-                // Set the Content-Type header
-                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
-
-                // Send the PUT request with the image data
-                HttpResponseMessage httpResponse = httpClient.PutAsync(upload, content).Result;
-
-                // Check the response status
-                if (httpResponse.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("PUT request succeeded.");
-                }
-                else
-                {
-                    Console.WriteLine($"PUT request failed with status code {httpResponse.StatusCode}");
-                }
+                Console.WriteLine("PUT request succeeded.");
             }
+            else
+            {
+                Console.WriteLine($"PUT request failed with status code {httpResponse.StatusCode}");
+            }
+        }
 
 
-            return publicURL; //this public url will be used to create the feature based on the uploaded asset
-        } 
+        return publicURL; //this public url will be used to create the feature based on the uploaded asset
+    }
 
+    public bool ActivityExists(string reference)
+    {
+        ActivityReferences activityReferences = new ActivityReferences();
+        activityReferences.References.Add(reference);
 
-    
+        Remote activityExists = GetActivities(activityReferences);
+        if (activityExists != null)
+        {
+            string jsonResponse = activityExists.getBody();
+            JsonObject jsonObject = JsonObjectFactory.fromString(jsonResponse);
+            int recordsCount = jsonObject.getJsonObject("meta").getInt("records");
+            return recordsCount > 0;
+        }
+        return false;
+    }
+
+    public bool ItemsExist(Activity activity)
+    {
+       
+        ItemReferences itemReferences = new ItemReferences();
+        itemReferences.References = activity.ActivityData.Items.ToList(); // Directly use the item strings.
+
+        Remote itemsExists = GetItems(itemReferences);
+
+        if (itemsExists != null)
+        {
+            string jsonResponse = itemsExists.getBody();
+            try
+            {
+                JsonObject jsonObject = JsonObjectFactory.fromString(jsonResponse);
+                int recordsCount = jsonObject.getJsonObject("meta").getInt("records");
+
+                return recordsCount > 0;
+            }
+            catch (Newtonsoft.Json.JsonReaderException)
+            {
+                // Handle invalid JSON response
+                return false;
+            }
+        }
+
+        return false;
+    }
 }
+
