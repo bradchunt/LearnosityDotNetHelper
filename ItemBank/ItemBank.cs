@@ -18,19 +18,69 @@ public class ItemBank
     }
 
 
-    private Remote SendDataApiRequest(string url, string action, object dataObject)
+    private ApiResponse SendDataApiRequest(string url, string action, object dataObject)
     {
+        try
+        {
+            string json = JsonConvert.SerializeObject(dataObject, Formatting.Indented,
+            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-        string json = JsonConvert.SerializeObject(dataObject, Formatting.Indented,
-        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-        JsonObject security = new JsonObject();
-        security.set("consumer_key", _settings.ConsumerKey);
-        security.set("domain", "localhost");
-        DataApi da = new DataApi();
-        JsonObject request = JsonObjectFactory.fromString(json);
-        Remote r = da.request(url, security, _settings.ConsumerSecret, request, action);
-        return r;
+            JsonObject security = new JsonObject();
+            security.set("consumer_key", _settings.ConsumerKey);
+            security.set("domain", "localhost");
 
+            DataApi da = new DataApi();
+            JsonObject request = JsonObjectFactory.fromString(json);
+            Remote r = da.request(url, security, _settings.ConsumerSecret, request, action);
+
+            ApiResponse response = new ApiResponse
+            {
+                HttpStatusCode = Convert.ToInt32(r.getStatusCode()),
+                RawResponseBody = r.getBody()
+            };
+
+            // Parse the response body
+            try
+            {
+                response.ParsedResponse = JsonConvert.DeserializeObject<dynamic>(r.getBody());
+
+                // Check the API's internal success status
+                if (response.ParsedResponse?.meta?.status != null)
+                {
+                    response.IsSuccess = (bool)response.ParsedResponse.meta.status;
+
+                    // For error responses, extract additional information
+                    if (!response.IsSuccess && response.ParsedResponse.meta.message != null)
+                    {
+                        response.ErrorMessage = response.ParsedResponse.meta.message.ToString();
+                    }
+
+                    if (response.ParsedResponse.meta.request_uuid != null)
+                    {
+                        response.RequestUuid = response.ParsedResponse.meta.request_uuid.ToString();
+                    }
+                }
+                else
+                {
+                    response.IsSuccess = Convert.ToInt32(r.getStatusCode()) == 200;
+                }
+            }
+            catch
+            {
+                // If we can't parse the response, base success on HTTP status code
+                response.IsSuccess = Convert.ToInt32(r.getStatusCode()) == 200;
+            }
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse
+            {
+                IsSuccess = false,
+                ErrorMessage = ex.Message
+            };
+        }
     }
 
 
@@ -38,7 +88,7 @@ public class ItemBank
     /// </summary>
     /// <param name="questions"></param>
     /// <returns></returns>
-    public Remote SetFeatures(Features features)
+    public ApiResponse SetFeatures(Features features)
     {
         string url = $"{_settings.URLData}/itembank/features";
         return SendDataApiRequest(url, "set", features);
@@ -50,7 +100,7 @@ public class ItemBank
     /// </summary>
     /// <param name="questions"></param>
     /// <returns></returns>
-    public Remote SetQuestions(Questions questions)
+    public ApiResponse SetQuestions(Questions questions)
     {
         string url = $"{_settings.URLData}/itembank/questions";
         return SendDataApiRequest(url, "set", questions);
@@ -63,7 +113,7 @@ public class ItemBank
     /// <param name="items"></param>
     /// <returns></returns>
 
-    public Remote SetItems(Items items)
+    public ApiResponse SetItems(Items items)
     {
         string url = $"{_settings.URLData}/itembank/items";
         return SendDataApiRequest(url, "set", items);
@@ -76,7 +126,7 @@ public class ItemBank
     /// <param name="activities"></param>
     /// <returns></returns>
 
-    public Remote SetActivities(Activities activities)
+    public ApiResponse SetActivities(Activities activities)
     {
         string url = $"{_settings.URLData}/itembank/activities";
         return SendDataApiRequest(url, "set", activities);
@@ -89,7 +139,7 @@ public class ItemBank
     /// <param name="activityReferences"></param>
     /// <returns></returns>
 
-    public Remote GetActivities(ActivityReferences activityReferences)
+    public ApiResponse GetActivities(ActivityReferences activityReferences)
     {
         string url = $"{_settings.URLData}/itembank/activities";
         return SendDataApiRequest(url, "get", activityReferences);
@@ -102,7 +152,7 @@ public class ItemBank
     /// <param name="itemReferences"></param>
     /// <returns></returns>
 
-    public Remote GetItems(ItemReferences itemReferences)
+    public ApiResponse GetItems(ItemReferences itemReferences)
     {
         string url = $"{_settings.URLData}/itembank/items";
         return SendDataApiRequest(url, "get", itemReferences);
@@ -204,10 +254,10 @@ public class ItemBank
         ActivityReferences activityReferences = new ActivityReferences();
         activityReferences.References.Add(reference);
 
-        Remote activityExists = GetActivities(activityReferences);
+        ApiResponse activityExists = GetActivities(activityReferences);
         if (activityExists != null)
         {
-            string jsonResponse = activityExists.getBody();
+            string jsonResponse = activityExists.RawResponseBody;
             JsonObject jsonObject = JsonObjectFactory.fromString(jsonResponse);
             int recordsCount = jsonObject.getJsonObject("meta").getInt("records");
             return recordsCount > 0;
@@ -221,11 +271,11 @@ public class ItemBank
         ItemReferences itemReferences = new ItemReferences();
         itemReferences.References = activity.ActivityData.Items.ToList(); // Directly use the item strings.
 
-        Remote itemsExists = GetItems(itemReferences);
+        ApiResponse itemsExists = GetItems(itemReferences);
 
         if (itemsExists != null)
         {
-            string jsonResponse = itemsExists.getBody();
+            string jsonResponse = itemsExists.RawResponseBody;
             try
             {
                 JsonObject jsonObject = JsonObjectFactory.fromString(jsonResponse);
