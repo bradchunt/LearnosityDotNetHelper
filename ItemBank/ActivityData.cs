@@ -13,5 +13,9 @@ namespace LearnosityDotNetHelper
         [JsonProperty("items")]
         public List<string> Items { get; set; } = new List<string>();
 
+        [JsonProperty("config")]
+        public Config? Config { get; set; }
+
+
     }
 }

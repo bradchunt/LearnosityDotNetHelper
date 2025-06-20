@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <PackageId>LearnosityDotNetHelper</PackageId>
-    <Version>0.0.8</Version>
+    <Version>0.0.9</Version>
     <Authors>Brad Hunt</Authors>
     <Description>A class library to assist .NET developers when working with the Learnosity APIs.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
